@@ -36,6 +36,8 @@ func init() {
 	})
 	ucon.Plugin(swPlugin)
 
+	setupSecretAPI(swPlugin)
+
 	ucon.DefaultMux.Prepare()
 	http.Handle("/api/", ucon.DefaultMux)
 }
