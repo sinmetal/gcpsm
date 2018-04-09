@@ -73,13 +73,16 @@
     "internal/modules",
     "internal/remote_api",
     "internal/urlfetch",
-    "urlfetch"
+    "internal/user",
+    "log",
+    "urlfetch",
+    "user"
   ]
   revision = "0a24098c0ec68416ec050f567f75df563d6b231e"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ee626c7323e10f382e0dc622f503921c644ce18a65144f48db5f9894792b9f1b"
+  inputs-digest = "b2404304182defda40dc7b5b76851dbe0af825d5d3b09455835bdc0530b14cd6"
   solver-name = "gps-cdcl"
   solver-version = 1
