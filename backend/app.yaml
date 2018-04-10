@@ -18,5 +18,9 @@ handlers:
 - url: /swagger-ui
   static_dir: swagger-ui
   login: admin
+- url: /secret.html
+  static_files: secret.html
+  upload: secret.html
+  login: admin
 - url: /.*
   script: _go_app
