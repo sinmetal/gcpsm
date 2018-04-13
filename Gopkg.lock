@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "cloud.google.com/go"
+  packages = ["compute/metadata"]
+  revision = "29f476ffa9c4cd4fd14336b6043090ac1ad76733"
+  version = "v0.21.0"
+
+[[projects]]
   name = "github.com/favclip/golidator"
   packages = ["."]
   revision = "f8a22a68c32005c88762ff41a4139950b49263a9"
@@ -21,6 +27,12 @@
   packages = ["proto"]
   revision = "925541529c1fa6821df4e44ce2723319eb2be768"
   version = "v1.0.0"
+
+[[projects]]
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
 
 [[projects]]
   name = "go.mercari.io/datastore"
@@ -49,14 +61,23 @@
   name = "golang.org/x/oauth2"
   packages = [
     ".",
-    "internal"
+    "google",
+    "internal",
+    "jws",
+    "jwt"
   ]
   revision = "921ae394b9430ed4fb549668d7b087601bd60a81"
 
 [[projects]]
   branch = "master"
   name = "google.golang.org/api"
-  packages = ["iterator"]
+  packages = [
+    "cloudkms/v1",
+    "gensupport",
+    "googleapi",
+    "googleapi/internal/uritemplates",
+    "iterator"
+  ]
   revision = "d4bfb8783945fe985beea2cb0fedffc2d020979c"
 
 [[projects]]
@@ -83,6 +104,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b2404304182defda40dc7b5b76851dbe0af825d5d3b09455835bdc0530b14cd6"
+  inputs-digest = "be95fc7f455db9b2de742f1aacd7fef45a4cadd9ace87e4f7afc9393474b0464"
   solver-name = "gps-cdcl"
   solver-version = 1
