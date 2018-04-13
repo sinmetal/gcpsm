@@ -6,6 +6,7 @@ import (
 
 	"github.com/favclip/ucon"
 	"github.com/favclip/ucon/swagger"
+	"google.golang.org/appengine"
 	"google.golang.org/appengine/log"
 	"google.golang.org/appengine/user"
 )
@@ -50,12 +51,30 @@ func (api *SecretAPI) Post(ctx context.Context, form *SecretAPIPostRequest) erro
 	if err != nil {
 		return err
 	}
+
+	kms, err := NewKMSService(ctx)
+	if err != nil {
+		return err
+	}
+	appID := appengine.AppID(ctx)
+	ev, _, err := kms.Encrypt(CryptKey{
+		ProjectID:  appID,
+		LocationID: "global",
+		KeyRingID:  "testkey",
+		KeyName:    "testCryptKey",
+	}, form.Value)
+	if err != nil {
+		log.Errorf(ctx, "%+v", err)
+		return err
+	}
+
 	k := ds.NameKey("Secret", form.Key, nil)
 	s := &Secret{
-		Value: form.Value,
+		Value: ev,
 	}
 	_, err = ds.Put(ctx, k, s)
 	if err != nil {
+		log.Errorf(ctx, "%+v", err)
 		return err
 	}
 
@@ -85,14 +104,32 @@ func (api *SecretAPI) Get(ctx context.Context, form *SecretAPIGetRequest) (*Secr
 	if err != nil {
 		return nil, err
 	}
+
 	k := ds.NameKey("Secret", form.Key, nil)
 	s := &Secret{}
 	if err := ds.Get(ctx, k, s); err != nil {
+		log.Errorf(ctx, "%+v", err)
+		return nil, err
+	}
+
+	kms, err := NewKMSService(ctx)
+	if err != nil {
+		return nil, err
+	}
+	appID := appengine.AppID(ctx)
+	pt, err := kms.Decrypt(CryptKey{
+		ProjectID:  appID,
+		LocationID: "global",
+		KeyRingID:  "testkey",
+		KeyName:    "testCryptKey",
+	}, s.Value)
+	if err != nil {
+		log.Errorf(ctx, "%+v", err)
 		return nil, err
 	}
 
 	return &SecretAPIGetResponse{
 		Key:   form.Key,
-		Value: s.Value,
+		Value: pt,
 	}, nil
 }
