@@ -2,6 +2,7 @@ package backend
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 
 	"github.com/favclip/ucon"
@@ -25,6 +26,11 @@ func setupSecretAPI(swPlugin *swagger.Plugin) {
 	hInfo.Description, hInfo.Tags = "get from secret", []string{tag.Name}
 }
 
+// LogEntry is Output Request Log
+type LogEntry struct {
+	User string `json:"user"`
+}
+
 // Secret is Datastore Entity
 type Secret struct {
 	Value string `datastore:",noindex"`
@@ -40,12 +46,15 @@ type SecretAPIPostRequest struct {
 }
 
 // Post is Secret registration handler
-func (api *SecretAPI) Post(ctx context.Context, form *SecretAPIPostRequest) error {
+func (api *SecretAPI) Post(ctx context.Context, form *SecretAPIPostRequest, r *http.Request) error {
+	le := &LogEntry{}
+	defer outputRequestLog(ctx, le)
+
 	u := user.Current(ctx)
 	if u == nil {
 		return &HTTPError{Code: http.StatusForbidden, Message: "You do not have permission."}
 	}
-	log.Infof(ctx, "%+v", u)
+	le.User = u.Email
 
 	ds, err := FromContext(ctx)
 	if err != nil {
@@ -93,12 +102,15 @@ type SecretAPIGetResponse struct {
 }
 
 // Get is Secret registration handler
-func (api *SecretAPI) Get(ctx context.Context, form *SecretAPIGetRequest) (*SecretAPIGetResponse, error) {
+func (api *SecretAPI) Get(ctx context.Context, form *SecretAPIGetRequest, r *http.Request) (*SecretAPIGetResponse, error) {
+	le := &LogEntry{}
+	defer outputRequestLog(ctx, le)
+
 	u := user.Current(ctx)
 	if u == nil {
 		return nil, &HTTPError{Code: http.StatusForbidden, Message: "You do not have permission."}
 	}
-	log.Infof(ctx, "%+v", u)
+	le.User = u.Email
 
 	ds, err := FromContext(ctx)
 	if err != nil {
@@ -132,4 +144,12 @@ func (api *SecretAPI) Get(ctx context.Context, form *SecretAPIGetRequest) (*Secr
 		Key:   form.Key,
 		Value: pt,
 	}, nil
+}
+
+func outputRequestLog(ctx context.Context, e *LogEntry) {
+	j, err := json.Marshal(e)
+	if err != nil {
+		panic(err)
+	}
+	log.Infof(ctx, "LogEntry=%s", j)
 }
