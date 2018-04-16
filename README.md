@@ -13,7 +13,7 @@ For example, when key = sample, value = hoge is registered.
 
 In Datastore, the value encrypted with Cloud KMS is saved.
 
-![Datastore](https://user-images.githubusercontent.com/446022/38799579-c9acf384-419f-11e8-936a-7220a16670e6.png)
+![Datastore](https://user-images.githubusercontent.com/446022/38800861-4bde0142-41a3-11e8-8451-cc03e0afd4b6.png)
 
 
 ### Authentication
