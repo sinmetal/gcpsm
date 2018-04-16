@@ -15,13 +15,18 @@ In Datastore, the value encrypted with Cloud KMS is saved.
 
 ![Datastore](https://user-images.githubusercontent.com/446022/38800861-4bde0142-41a3-11e8-8451-cc03e0afd4b6.png)
 
-
 ### Authentication
 
 * [Google Cloud Identity-Aware Proxy](https://cloud.google.com/iap/)
 * [Google App Engine Firewall](https://cloud.google.com/appengine/docs/standard/go/creating-firewalls)
 
 With IAP, you can control with Google Account and GCP Service Account. When using Service Account in CI, it is good to use [iap_curl](https://github.com/b4b4r07/iap_curl) .
+
+``` shell
+iap_curl https://{app engine project}/api/1/secret/sample
+{"key":"sample","value":"hoge"}
+```
+
 If you want to control with IP Addr, use App Engine Firewall.
 IAP and Firewall can be used at the same time.
 
